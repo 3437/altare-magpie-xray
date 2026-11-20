@@ -8,9 +8,9 @@ set -euo pipefail
 : "${VLESS_UUID:?need VLESS_UUID}"
 : "${MAGPIE_WEB_KEY:?need MAGPIE_WEB_KEY}"
 
-mkdir -p /data /app/log
+mkdir -p /data /data/log
 
-cat > /app/xray.json <<EOF
+cat > /data/xray.json <<EOF
 {
   "log": {"loglevel": "warning"},
   "inbounds": [{
@@ -26,11 +26,11 @@ cat > /app/xray.json <<EOF
 }
 EOF
 
-/usr/local/bin/xray run -c /app/xray.json > /app/log/xray.log 2>&1 &
+/usr/local/bin/xray run -c /data/xray.json > /data/log/xray.log 2>&1 &
 # magpie keeps providers/keys under $HOME; point it at /data so it survives
 # redeploys (Altare only preserves the Data folder, default /data).
 export HOME=/data
-/usr/local/bin/magpie web --lan --no-open > /app/log/magpie.log 2>&1 &
+/usr/local/bin/magpie web --lan --no-open > /data/log/magpie.log 2>&1 &
 
 # Wait for the backends to listen before proxying (Altare rolls back if the
 # app port is not listening ~90s after build; proxy.js is the app port).
