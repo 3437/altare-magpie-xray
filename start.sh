@@ -32,6 +32,11 @@ EOF
 export HOME=/data
 /usr/local/bin/magpie web --lan --no-open > /data/log/magpie.log 2>&1 &
 
+# Optional Cloudflare Tunnel entry (sg2.alz.qzz.io -> proxy.js :8080).
+if [ -n "${CF_TUNNEL_TOKEN:-}" ]; then
+  /usr/local/bin/cloudflared tunnel --no-autoupdate run --token "$CF_TUNNEL_TOKEN" > /data/log/cloudflared.log 2>&1 &
+fi
+
 # Wait for the backends to listen before proxying (Altare rolls back if the
 # app port is not listening ~90s after build; proxy.js is the app port).
 for i in $(seq 1 30); do
