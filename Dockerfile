@@ -19,6 +19,11 @@ RUN curl -fsSL -o /usr/local/bin/magpie \
       https://github.com/yetone/magpie-releases/releases/latest/download/magpie-cli-linux-amd64 \
   && chmod 755 /usr/local/bin/magpie
 
+# cloudflared (optional Cloudflare Tunnel entry; token via CF_TUNNEL_TOKEN env)
+RUN curl -fsSL -o /usr/local/bin/cloudflared \
+      https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
+  && chmod 755 /usr/local/bin/cloudflared
+
 WORKDIR /app
 COPY proxy.js start.sh ./
 RUN chmod +x start.sh
